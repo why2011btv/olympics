@@ -1,0 +1,122 @@
+{
+  "cards": [
+    {
+      "id": "strike",
+      "name": "Strike",
+      "cost": "1",
+      "effects": [
+        {"type": "damage", "value": 6, "timing": "IMMEDIATE"}
+      ],
+      "tags": ["attack", "basic"],
+      "weight": 1.0
+    },
+    {
+      "id": "defend",
+      "name": "Defend", 
+      "cost": 1,
+      "effects": [
+        {"type": "block", "value": 5, "timing": "IMMEDIATE"}
+      ],
+      "tags": ["skill", "basic"]
+    },
+    {
+      "id": "bash",
+      "name": "Bash",
+      "cost": 2.0,
+      "effects": [
+        {"type": "damage", "value": 8},
+        {"type": "status", "value": 2, "duration": 3, "condition": "VULNERABLE", "targets_self": false}
+      ],
+      "tags": ["attack", "status"]
+    },
+    {
+      "id": "surge",
+      "name": "Energy Surge",
+      "cost": 0,
+      "effects": [
+        {"type": "energy", "value": 2},
+        {"type": "draw", "value": 2, "timing": "IMMEDIATE"}
+      ],
+      "tags": ["skill", "power"],
+      "ethereal": true,
+      "upgradeable": false
+    },
+    {
+      "id": "poison_stab",
+      "name": "Poison Stab",
+      "cost": 1,
+      "effects": [
+        {"type": "damage", "value": 4},
+        {"type": "status", "value": 3, "condition": "POISON", "duration": -1}
+      ],
+      "tags": ["attack", "status"]
+    },
+    {
+      "id": "meditate", 
+      "name": "Meditate",
+      "cost": 1,
+      "effects": [
+        {"type": "heal", "value": 5, "targets_self": true, "condition": "hp < 50"}
+      ],
+      "tags": ["skill"],
+      "retain": true
+    },
+    {
+      "id": "finisher",
+      "name": "Grand Finale",
+      "cost": 3,
+      "effects": [
+        {"type": "damage", "value": 20, "condition": "cards_in_hand <= 1"}
+      ],
+      "tags": ["attack", "finisher"],
+      "weight": 0.5
+    }
+  ],
+  
+  "starting_deck": [
+    "strike", "strike", "strike", "strike",
+    "defend", "defend", "defend", 
+    "bash", "surge"
+  ],
+  
+  "max_hand_size": 10,
+  "cards_per_turn": 5,
+  "starting_hand_size": 5,
+  
+  "player_health": 80,
+  "enemy_health": 120,
+  "max_turns": 50,
+  
+  "enemy_patterns": [
+    {"type": "attack", "value": 5, "scaling": "turn // 5"},
+    {"type": "attack", "value": 8},
+    {"type": "block", "value": 10, "scaling": "turn // 10"}, 
+    {"type": "attack", "value": 12, "scaling": "turn // 3 + (1 if enraged else 0) * 5"},
+    {"type": "buff", "value": 1, "condition": "enemy_hp < enemy_max_hp // 2"}
+  ],
+  
+  "intent_scaler": "(turn // 3) + (2 if enraged else 0) + max(0, (enemy_max_hp - enemy_hp) // 20)",
+  
+  "ai_priorities": [
+    {"tag": "status", "multiplier": 1.5, "condition": "always"},
+    {"tag": "attack", "multiplier": 2.0, "condition": "low_health", "threshold": 0.3},
+    {"tag": "skill", "multiplier": 1.2, "condition": "always"},
+    {"tag": "finisher", "multiplier": 3.0, "condition": "always"}
+  ],
+  
+  "ai_play_threshold": 15.0,
+  
+  "poison_decay_num": 2,
+  "poison_decay_den": 3,
+  "vulnerable_multiplier": "1.5",
+  "weak_multiplier": "0.75",
+  
+  "enable_card_generation": true,
+  "card_generation_cost": 1,
+  "max_generated_cards": 3,
+  
+  "defaults": {
+    "max_energy": 3,
+    "energy_per_turn": "3"
+  }
+}
